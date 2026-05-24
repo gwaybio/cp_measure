@@ -2,10 +2,10 @@
   "schema_version": "0.1",
   "description": "Good-enough mapping between cp_measure feature names and CellProfiler 4.x feature names. This is NOT exhaustive and NOT guaranteed to be perfect. Use it to flag clear incompatibilities; do not assume everything maps cleanly.",
   "notes": [
-    "CellProfiler embeds the image/channel name and object name inside the feature string. cp_measure does not — channel is handled by the caller (e.g. via featurizer.py's __ separator).",
-    "Texture: the image name is inserted BETWEEN the Haralick feature name and the scale, e.g. cp_measure 'AngularSecondMoment_3_00_256' → CellProfiler 'Texture_AngularSecondMoment_{image}_3_00_256'.",
-    "RadialDistribution: image name inserted between metric and bin, e.g. 'RadialDistribution_FracAtD_1of4' → 'RadialDistribution_FracAtD_{image}_1of4'.",
-    "Granularity: image name appended, e.g. 'Granularity_1' → 'Granularity_1_{image}'.",
+    "CellProfiler embeds the image/channel name and object name inside the feature string. cp_measure does not \u2014 channel is handled by the caller (e.g. via featurizer.py's __ separator).",
+    "Texture: the image name is inserted BETWEEN the Haralick feature name and the scale, e.g. cp_measure 'AngularSecondMoment_3_00_256' \u2192 CellProfiler 'Texture_AngularSecondMoment_{image}_3_00_256'.",
+    "RadialDistribution: image name inserted between metric and bin, e.g. 'RadialDistribution_FracAtD_1of4' \u2192 'RadialDistribution_FracAtD_{image}_1of4'.",
+    "Granularity: image name appended, e.g. 'Granularity_1' \u2192 'Granularity_1_{image}'.",
     "Some cp_measure features (moments, InertiaTensor, etc.) have no direct CellProfiler equivalent.",
     "Some CellProfiler features (e.g. AreaShape_HullSolidity) may not exist in cp_measure.",
     "Confidence levels: high = math and name verified; medium = name matches, math assumed equivalent; low = plausible match, unverified."
@@ -14,36 +14,255 @@
     "sizeshape": {
       "cp_measure_module": "measureobjectsizeshape.get_sizeshape",
       "cellprofiler_module": "MeasureObjectSizeShape",
-      "naming_rule": "AreaShape_{cp_name}  (no channel needed — shape is image-independent)",
+      "naming_rule": "AreaShape_{cp_name}  (no channel needed \u2014 shape is image-independent)",
       "confidence": "high",
       "features": {
-        "Area":                    {"cellprofiler": "AreaShape_Area",                    "confidence": "high"},
-        "Perimeter":               {"cellprofiler": "AreaShape_Perimeter",               "confidence": "high"},
-        "FormFactor":              {"cellprofiler": "AreaShape_FormFactor",              "confidence": "high"},
-        "Eccentricity":            {"cellprofiler": "AreaShape_Eccentricity",            "confidence": "high"},
-        "MajorAxisLength":         {"cellprofiler": "AreaShape_MajorAxisLength",         "confidence": "high"},
-        "MinorAxisLength":         {"cellprofiler": "AreaShape_MinorAxisLength",         "confidence": "high"},
-        "Orientation":             {"cellprofiler": "AreaShape_Orientation",             "confidence": "high"},
-        "Compactness":             {"cellprofiler": "AreaShape_Compactness",             "confidence": "high"},
-        "Solidity":                {"cellprofiler": "AreaShape_Solidity",                "confidence": "high"},
-        "Extent":                  {"cellprofiler": "AreaShape_Extent",                  "confidence": "high"},
-        "EulerNumber":             {"cellprofiler": "AreaShape_EulerNumber",             "confidence": "high"},
-        "EquivalentDiameter":      {"cellprofiler": "AreaShape_EquivalentDiameter",      "confidence": "high"},
-        "MaximumRadius":           {"cellprofiler": "AreaShape_MaximumRadius",           "confidence": "high"},
-        "MeanRadius":              {"cellprofiler": "AreaShape_MeanRadius",              "confidence": "high"},
-        "MedianRadius":            {"cellprofiler": "AreaShape_MedianRadius",            "confidence": "high"},
-        "ConvexArea":              {"cellprofiler": "AreaShape_ConvexArea",              "confidence": "medium"},
-        "BoundingBoxArea":         {"cellprofiler": null,                                "confidence": "low",   "note": "No direct CellProfiler equivalent; closest is bounding box min/max"},
-        "Center_X":                {"cellprofiler": "AreaShape_Center_X",               "confidence": "medium"},
-        "Center_Y":                {"cellprofiler": "AreaShape_Center_Y",               "confidence": "medium"},
-        "FilledArea":              {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
-        "SpatialMoment_0_0":       {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only — CellProfiler does not expose raw spatial moments"},
-        "CentralMoment_0_0":       {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
-        "NormalizedMoment_0_0":    {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
-        "HuMoment_0":              {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
-        "InertiaTensor_0_0":       {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
-        "InertiaTensorEigenvalues_0": {"cellprofiler": null,                             "confidence": "low",   "note": "cp_measure only"},
-        "PerimeterCrofton":        {"cellprofiler": "AreaShape_PerimeterCrofton",        "confidence": "medium"}
+        "Area": {
+          "cellprofiler": "AreaShape_Area",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 9e-06,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Perimeter": {
+          "cellprofiler": "AreaShape_Perimeter",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.000358,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "FormFactor": {
+          "cellprofiler": "AreaShape_FormFactor",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.003495,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Eccentricity": {
+          "cellprofiler": "AreaShape_Eccentricity",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.002519,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "MajorAxisLength": {
+          "cellprofiler": "AreaShape_MajorAxisLength",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 1.5e-05,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "MinorAxisLength": {
+          "cellprofiler": "AreaShape_MinorAxisLength",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 3.7e-05,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Orientation": {
+          "cellprofiler": "AreaShape_Orientation",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.395961,
+            "category": "moderate",
+            "correction": null
+          }
+        },
+        "Compactness": {
+          "cellprofiler": "AreaShape_Compactness",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.004852,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Solidity": {
+          "cellprofiler": "AreaShape_Solidity",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.082689,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Extent": {
+          "cellprofiler": "AreaShape_Extent",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 3.921066,
+            "category": "high",
+            "correction": null
+          }
+        },
+        "EulerNumber": {
+          "cellprofiler": "AreaShape_EulerNumber",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": null,
+            "category": "constant",
+            "correction": null
+          }
+        },
+        "EquivalentDiameter": {
+          "cellprofiler": "AreaShape_EquivalentDiameter",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 9e-06,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "MaximumRadius": {
+          "cellprofiler": "AreaShape_MaximumRadius",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.000204,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "MeanRadius": {
+          "cellprofiler": "AreaShape_MeanRadius",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 6.3e-05,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "MedianRadius": {
+          "cellprofiler": "AreaShape_MedianRadius",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.001399,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "ConvexArea": {
+          "cellprofiler": "AreaShape_ConvexArea",
+          "confidence": "medium",
+          "rotation_sensitivity": {
+            "rsi": 2e-05,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "BoundingBoxArea": {
+          "cellprofiler": null,
+          "confidence": "low",
+          "note": "No direct CellProfiler equivalent; closest is bounding box min/max",
+          "rotation_sensitivity": {
+            "rsi": 0.23477,
+            "category": "moderate",
+            "correction": null
+          }
+        },
+        "Center_X": {
+          "cellprofiler": "AreaShape_Center_X",
+          "confidence": "medium",
+          "rotation_sensitivity": {
+            "rsi": 5.214594,
+            "category": "high",
+            "correction": null
+          }
+        },
+        "Center_Y": {
+          "cellprofiler": "AreaShape_Center_Y",
+          "confidence": "medium",
+          "rotation_sensitivity": {
+            "rsi": 5.638931,
+            "category": "high",
+            "correction": null
+          }
+        },
+        "FilledArea": {
+          "cellprofiler": null,
+          "confidence": "low",
+          "note": "cp_measure only",
+          "rotation_sensitivity": {
+            "rsi": 9e-06,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "SpatialMoment_0_0": {
+          "cellprofiler": null,
+          "confidence": "low",
+          "note": "cp_measure only \u2014 CellProfiler does not expose raw spatial moments",
+          "rotation_sensitivity": {
+            "rsi": 9e-06,
+            "category": "stable",
+            "correction": "moment_rotation_correction"
+          }
+        },
+        "CentralMoment_0_0": {
+          "cellprofiler": null,
+          "confidence": "low",
+          "note": "cp_measure only",
+          "rotation_sensitivity": {
+            "rsi": 9e-06,
+            "category": "stable",
+            "correction": "moment_rotation_correction"
+          }
+        },
+        "NormalizedMoment_0_0": {
+          "cellprofiler": null,
+          "confidence": "low",
+          "note": "cp_measure only"
+        },
+        "HuMoment_0": {
+          "cellprofiler": null,
+          "confidence": "low",
+          "note": "cp_measure only",
+          "rotation_sensitivity": {
+            "rsi": 0.000193,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "InertiaTensor_0_0": {
+          "cellprofiler": null,
+          "confidence": "low",
+          "note": "cp_measure only",
+          "rotation_sensitivity": {
+            "rsi": 0.185698,
+            "category": "moderate",
+            "correction": "moment_rotation_correction"
+          }
+        },
+        "InertiaTensorEigenvalues_0": {
+          "cellprofiler": null,
+          "confidence": "low",
+          "note": "cp_measure only",
+          "rotation_sensitivity": {
+            "rsi": 2.3e-05,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "PerimeterCrofton": {
+          "cellprofiler": "AreaShape_PerimeterCrofton",
+          "confidence": "medium",
+          "rotation_sensitivity": {
+            "rsi": 0.00036,
+            "category": "stable",
+            "correction": null
+          }
+        }
       }
     },
     "zernike": {
@@ -51,7 +270,282 @@
       "cellprofiler_module": "MeasureObjectSizeShape (Zernike option)",
       "naming_rule": "AreaShape_Zernike_{n}_{m}",
       "confidence": "high",
-      "example": {"cp_measure": "Zernike_0_0", "cellprofiler": "AreaShape_Zernike_0_0"}
+      "example": {
+        "cp_measure": "Zernike_0_0",
+        "cellprofiler": "AreaShape_Zernike_0_0"
+      },
+      "features": {
+        "Zernike_0_0": {
+          "cellprofiler": "AreaShape_Zernike_0_0",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.000466,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Zernike_1_1": {
+          "cellprofiler": "AreaShape_Zernike_1_1",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 2.133783,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_2_0": {
+          "cellprofiler": "AreaShape_Zernike_2_0",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.001311,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Zernike_2_2": {
+          "cellprofiler": "AreaShape_Zernike_2_2",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.002305,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Zernike_3_1": {
+          "cellprofiler": "AreaShape_Zernike_3_1",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 1.646915,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_3_3": {
+          "cellprofiler": "AreaShape_Zernike_3_3",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 2.927991,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_4_0": {
+          "cellprofiler": "AreaShape_Zernike_4_0",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.01493,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_4_2": {
+          "cellprofiler": "AreaShape_Zernike_4_2",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.004936,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Zernike_4_4": {
+          "cellprofiler": "AreaShape_Zernike_4_4",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.016629,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_5_1": {
+          "cellprofiler": "AreaShape_Zernike_5_1",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 4.043367,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_5_3": {
+          "cellprofiler": "AreaShape_Zernike_5_3",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.605157,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_5_5": {
+          "cellprofiler": "AreaShape_Zernike_5_5",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 3.823194,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_6_0": {
+          "cellprofiler": "AreaShape_Zernike_6_0",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.05911,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_6_2": {
+          "cellprofiler": "AreaShape_Zernike_6_2",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.02149,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_6_4": {
+          "cellprofiler": "AreaShape_Zernike_6_4",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.036218,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_6_6": {
+          "cellprofiler": "AreaShape_Zernike_6_6",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.042334,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_7_1": {
+          "cellprofiler": "AreaShape_Zernike_7_1",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 3.272163,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_7_3": {
+          "cellprofiler": "AreaShape_Zernike_7_3",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 1.546975,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_7_5": {
+          "cellprofiler": "AreaShape_Zernike_7_5",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 1.677241,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_7_7": {
+          "cellprofiler": "AreaShape_Zernike_7_7",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.516407,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_8_0": {
+          "cellprofiler": "AreaShape_Zernike_8_0",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.083738,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_8_2": {
+          "cellprofiler": "AreaShape_Zernike_8_2",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.033535,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_8_4": {
+          "cellprofiler": "AreaShape_Zernike_8_4",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.080125,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_8_6": {
+          "cellprofiler": "AreaShape_Zernike_8_6",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.078445,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_8_8": {
+          "cellprofiler": "AreaShape_Zernike_8_8",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.086298,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Zernike_9_1": {
+          "cellprofiler": "AreaShape_Zernike_9_1",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 2.17101,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_9_3": {
+          "cellprofiler": "AreaShape_Zernike_9_3",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 1.999058,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_9_5": {
+          "cellprofiler": "AreaShape_Zernike_9_5",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.453431,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_9_7": {
+          "cellprofiler": "AreaShape_Zernike_9_7",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.783705,
+            "category": "test_artefact",
+            "correction": null
+          }
+        },
+        "Zernike_9_9": {
+          "cellprofiler": "AreaShape_Zernike_9_9",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.848341,
+            "category": "test_artefact",
+            "correction": null
+          }
+        }
+      }
     },
     "feret": {
       "cp_measure_module": "measureobjectsizeshape.get_feret",
@@ -59,8 +553,24 @@
       "naming_rule": "AreaShape_{cp_name}",
       "confidence": "high",
       "features": {
-        "MinFeretDiameter": {"cellprofiler": "AreaShape_MinFeretDiameter", "confidence": "high"},
-        "MaxFeretDiameter": {"cellprofiler": "AreaShape_MaxFeretDiameter", "confidence": "high"}
+        "MinFeretDiameter": {
+          "cellprofiler": "AreaShape_MinFeretDiameter",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.000291,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "MaxFeretDiameter": {
+          "cellprofiler": "AreaShape_MaxFeretDiameter",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 4.6e-05,
+            "category": "stable",
+            "correction": null
+          }
+        }
       }
     },
     "intensity": {
@@ -69,25 +579,177 @@
       "naming_rule": "{cp_name}_{image}  (append channel/image name)",
       "confidence": "high",
       "features": {
-        "Intensity_IntegratedIntensity":      {"cellprofiler": "Intensity_IntegratedIntensity_{image}",      "confidence": "high"},
-        "Intensity_MeanIntensity":            {"cellprofiler": "Intensity_MeanIntensity_{image}",            "confidence": "high"},
-        "Intensity_StdIntensity":             {"cellprofiler": "Intensity_StdIntensity_{image}",             "confidence": "high"},
-        "Intensity_MinIntensity":             {"cellprofiler": "Intensity_MinIntensity_{image}",             "confidence": "high"},
-        "Intensity_MaxIntensity":             {"cellprofiler": "Intensity_MaxIntensity_{image}",             "confidence": "high"},
-        "Intensity_MassDisplacement":         {"cellprofiler": "Intensity_MassDisplacement_{image}",         "confidence": "high"},
-        "Intensity_LowerQuartileIntensity":   {"cellprofiler": "Intensity_LowerQuartileIntensity_{image}",   "confidence": "high"},
-        "Intensity_MedianIntensity":          {"cellprofiler": "Intensity_MedianIntensity_{image}",          "confidence": "high"},
-        "Intensity_MADIntensity":             {"cellprofiler": "Intensity_MADIntensity_{image}",             "confidence": "high"},
-        "Intensity_UpperQuartileIntensity":   {"cellprofiler": "Intensity_UpperQuartileIntensity_{image}",   "confidence": "high"},
-        "Intensity_IntegratedIntensityEdge":  {"cellprofiler": "Intensity_IntegratedIntensityEdge_{image}",  "confidence": "high"},
-        "Intensity_MeanIntensityEdge":        {"cellprofiler": "Intensity_MeanIntensityEdge_{image}",        "confidence": "high"},
-        "Intensity_StdIntensityEdge":         {"cellprofiler": "Intensity_StdIntensityEdge_{image}",         "confidence": "high"},
-        "Intensity_MinIntensityEdge":         {"cellprofiler": "Intensity_MinIntensityEdge_{image}",         "confidence": "high"},
-        "Intensity_MaxIntensityEdge":         {"cellprofiler": "Intensity_MaxIntensityEdge_{image}",         "confidence": "high"},
-        "Location_CenterMassIntensity_X":     {"cellprofiler": "Location_CenterMassIntensity_X_{image}",     "confidence": "medium"},
-        "Location_CenterMassIntensity_Y":     {"cellprofiler": "Location_CenterMassIntensity_Y_{image}",     "confidence": "medium"},
-        "Location_MaxIntensity_X":            {"cellprofiler": "Location_MaxIntensity_X_{image}",            "confidence": "medium"},
-        "Location_MaxIntensity_Y":            {"cellprofiler": "Location_MaxIntensity_Y_{image}",            "confidence": "medium"}
+        "Intensity_IntegratedIntensity": {
+          "cellprofiler": "Intensity_IntegratedIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 5e-06,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_MeanIntensity": {
+          "cellprofiler": "Intensity_MeanIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.000111,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_StdIntensity": {
+          "cellprofiler": "Intensity_StdIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.009343,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_MinIntensity": {
+          "cellprofiler": "Intensity_MinIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.153465,
+            "category": "moderate",
+            "correction": null
+          }
+        },
+        "Intensity_MaxIntensity": {
+          "cellprofiler": "Intensity_MaxIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.000982,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_MassDisplacement": {
+          "cellprofiler": "Intensity_MassDisplacement_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.001031,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_LowerQuartileIntensity": {
+          "cellprofiler": "Intensity_LowerQuartileIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.000205,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_MedianIntensity": {
+          "cellprofiler": "Intensity_MedianIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 7.4e-05,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_MADIntensity": {
+          "cellprofiler": "Intensity_MADIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.002162,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_UpperQuartileIntensity": {
+          "cellprofiler": "Intensity_UpperQuartileIntensity_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 5.5e-05,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_IntegratedIntensityEdge": {
+          "cellprofiler": "Intensity_IntegratedIntensityEdge_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.009391,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_MeanIntensityEdge": {
+          "cellprofiler": "Intensity_MeanIntensityEdge_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.008361,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Intensity_StdIntensityEdge": {
+          "cellprofiler": "Intensity_StdIntensityEdge_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.03707,
+            "category": "low",
+            "correction": null
+          }
+        },
+        "Intensity_MinIntensityEdge": {
+          "cellprofiler": "Intensity_MinIntensityEdge_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.153465,
+            "category": "moderate",
+            "correction": null
+          }
+        },
+        "Intensity_MaxIntensityEdge": {
+          "cellprofiler": "Intensity_MaxIntensityEdge_{image}",
+          "confidence": "high",
+          "rotation_sensitivity": {
+            "rsi": 0.006673,
+            "category": "stable",
+            "correction": null
+          }
+        },
+        "Location_CenterMassIntensity_X": {
+          "cellprofiler": "Location_CenterMassIntensity_X_{image}",
+          "confidence": "medium",
+          "rotation_sensitivity": {
+            "rsi": 0.587861,
+            "category": "moderate",
+            "correction": "convert_to_distance_from_centroid"
+          }
+        },
+        "Location_CenterMassIntensity_Y": {
+          "cellprofiler": "Location_CenterMassIntensity_Y_{image}",
+          "confidence": "medium",
+          "rotation_sensitivity": {
+            "rsi": 5.344895,
+            "category": "high",
+            "correction": "convert_to_distance_from_centroid"
+          }
+        },
+        "Location_MaxIntensity_X": {
+          "cellprofiler": "Location_MaxIntensity_X_{image}",
+          "confidence": "medium",
+          "rotation_sensitivity": {
+            "rsi": 0.628526,
+            "category": "moderate",
+            "correction": "convert_to_distance_from_centroid"
+          }
+        },
+        "Location_MaxIntensity_Y": {
+          "cellprofiler": "Location_MaxIntensity_Y_{image}",
+          "confidence": "medium",
+          "rotation_sensitivity": {
+            "rsi": 3.748785,
+            "category": "high",
+            "correction": "convert_to_distance_from_centroid"
+          }
+        }
       }
     },
     "texture": {
@@ -101,9 +763,19 @@
         "cellprofiler": "Texture_AngularSecondMoment_{image}_3_00_256"
       },
       "haralick_features": [
-        "AngularSecondMoment", "Contrast", "Correlation", "Variance",
-        "InverseDifferenceMoment", "SumAverage", "SumVariance", "SumEntropy",
-        "Entropy", "DifferenceVariance", "DifferenceEntropy", "InfoMeas1", "InfoMeas2"
+        "AngularSecondMoment",
+        "Contrast",
+        "Correlation",
+        "Variance",
+        "InverseDifferenceMoment",
+        "SumAverage",
+        "SumVariance",
+        "SumEntropy",
+        "Entropy",
+        "DifferenceVariance",
+        "DifferenceEntropy",
+        "InfoMeas1",
+        "InfoMeas2"
       ]
     },
     "granularity": {
@@ -130,7 +802,7 @@
     "radial_zernikes": {
       "cp_measure_module": "measureobjectintensitydistribution.get_radial_zernikes",
       "cellprofiler_module": "MeasureObjectIntensityDistribution (Zernike option)",
-      "naming_rule": "RadialDistribution_{ZernikeType}_{n}_{m}_{image}  — WARNING: CellProfiler appends image; cp_measure does not include it",
+      "naming_rule": "RadialDistribution_{ZernikeType}_{n}_{m}_{image}  \u2014 WARNING: CellProfiler appends image; cp_measure does not include it",
       "confidence": "low",
       "note": "Zernike phase and magnitude naming may differ between versions. Treat as low-confidence until validated against benchmark data.",
       "example": {
@@ -150,5 +822,1894 @@
       "Location_X, Location_Y (centroid from Identify module, not from measure)",
       "Any features from modules not implemented in cp_measure (e.g. MeasureObjectNeighbors details)"
     ]
+  },
+  "rotation_sensitivity_study": {
+    "description": "RSI (Rotation Sensitivity Index) scores from a 115,200-row simulation: 1,600 synthetic cells \u00d7 72 angles (0\u2013355\u00b0 in 5\u00b0 steps). RSI = within-cell variance across angles / between-cell variance at angle=0. See github.com/gwaybio/cellgenerator analysis/ for full notebooks and methodology.",
+    "dataset": "1,600 EllipseMask cells \u00d7 72 angles = 115,200 measurements",
+    "rsi_categories": {
+      "stable": "RSI < 0.01  \u2014 rotation contributes < 1% of biological variance",
+      "low": "RSI 0.01\u20130.10",
+      "moderate": "RSI 0.10\u20131.0",
+      "high": "RSI > 1.0  \u2014 rotation dominates",
+      "test_artefact": "Appears sensitive due to symmetric test shapes; genuinely invariant",
+      "constant": "Zero between-cell variance in this dataset; RSI undefined"
+    },
+    "corrections": {
+      "moment_rotation_correction": "Binomial rotation transform applied to all (p,q) moments simultaneously",
+      "phase_minus_m_times_orientation": "phase_corrected = phase + m \u00d7 angle_rad  (sign confirmed empirically)",
+      "convert_to_distance_from_centroid": "sqrt((X-cx)\u00b2+(Y-cy)\u00b2); replace X/Y pair with scalar distance",
+      "pre_orient_only": "No analytical post-hoc fix; rotate image to canonical orientation before measurement"
+    },
+    "summary": {
+      "total_features": 372,
+      "stable_rsi_lt_001": 130,
+      "low_rsi_001_010": 93,
+      "moderate_rsi_010_100": 62,
+      "high_rsi_gt_100": 54,
+      "test_artefact": 20,
+      "constant": 13
+    }
+  },
+  "per_feature_rotation_sensitivity": {
+    "Area": {
+      "rsi": 9e-06,
+      "category": "stable",
+      "correction": null
+    },
+    "BoundingBoxArea": {
+      "rsi": 0.23477,
+      "category": "moderate",
+      "correction": null
+    },
+    "ConvexArea": {
+      "rsi": 2e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "EquivalentDiameter": {
+      "rsi": 9e-06,
+      "category": "stable",
+      "correction": null
+    },
+    "Perimeter": {
+      "rsi": 0.000358,
+      "category": "stable",
+      "correction": null
+    },
+    "MajorAxisLength": {
+      "rsi": 1.5e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "MinorAxisLength": {
+      "rsi": 3.7e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "Eccentricity": {
+      "rsi": 0.002519,
+      "category": "stable",
+      "correction": null
+    },
+    "Orientation": {
+      "rsi": 0.395961,
+      "category": "moderate",
+      "correction": null
+    },
+    "Center_X": {
+      "rsi": 5.214594,
+      "category": "high",
+      "correction": null
+    },
+    "Center_Y": {
+      "rsi": 5.638931,
+      "category": "high",
+      "correction": null
+    },
+    "BoundingBoxMinimum_X": {
+      "rsi": 0.199998,
+      "category": "moderate",
+      "correction": null
+    },
+    "BoundingBoxMaximum_X": {
+      "rsi": 0.201027,
+      "category": "moderate",
+      "correction": null
+    },
+    "BoundingBoxMinimum_Y": {
+      "rsi": 1.629402,
+      "category": "high",
+      "correction": null
+    },
+    "BoundingBoxMaximum_Y": {
+      "rsi": 1.46484,
+      "category": "high",
+      "correction": null
+    },
+    "FormFactor": {
+      "rsi": 0.003495,
+      "category": "stable",
+      "correction": null
+    },
+    "Extent": {
+      "rsi": 3.921066,
+      "category": "high",
+      "correction": null
+    },
+    "Solidity": {
+      "rsi": 0.082689,
+      "category": "low",
+      "correction": null
+    },
+    "Compactness": {
+      "rsi": 0.004852,
+      "category": "stable",
+      "correction": null
+    },
+    "EulerNumber": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "MaximumRadius": {
+      "rsi": 0.000204,
+      "category": "stable",
+      "correction": null
+    },
+    "MeanRadius": {
+      "rsi": 6.3e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "MedianRadius": {
+      "rsi": 0.001399,
+      "category": "stable",
+      "correction": null
+    },
+    "FilledArea": {
+      "rsi": 9e-06,
+      "category": "stable",
+      "correction": null
+    },
+    "SpatialMoment_0_0": {
+      "rsi": 9e-06,
+      "category": "stable",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_0_1": {
+      "rsi": 0.079885,
+      "category": "low",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_0_2": {
+      "rsi": 0.142424,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_0_3": {
+      "rsi": 0.169882,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_1_0": {
+      "rsi": 0.556954,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_1_1": {
+      "rsi": 0.277543,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_1_2": {
+      "rsi": 0.421617,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_1_3": {
+      "rsi": 0.496024,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_2_0": {
+      "rsi": 6.671784,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_2_1": {
+      "rsi": 2.887498,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_2_2": {
+      "rsi": 2.862123,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "SpatialMoment_2_3": {
+      "rsi": 2.86074,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_0_0": {
+      "rsi": 9e-06,
+      "category": "stable",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_0_1": {
+      "rsi": 0.815868,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_0_2": {
+      "rsi": 0.131957,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_0_3": {
+      "rsi": 3.17944,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_1_0": {
+      "rsi": 13.688272,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_1_1": {
+      "rsi": 1036113.75,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_1_2": {
+      "rsi": 0.097743,
+      "category": "low",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_1_3": {
+      "rsi": 421663.84375,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_2_0": {
+      "rsi": 6.393626,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_2_1": {
+      "rsi": 34.821255,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_2_2": {
+      "rsi": 1.187804,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "CentralMoment_2_3": {
+      "rsi": 18.11096,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_0_2": {
+      "rsi": 0.572697,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_0_3": {
+      "rsi": 0.684848,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_1_1": {
+      "rsi": 30353.916016,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_1_2": {
+      "rsi": 1.148977,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_1_3": {
+      "rsi": 43372.574219,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_2_0": {
+      "rsi": 7.877635,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_2_1": {
+      "rsi": 1.65541,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_2_2": {
+      "rsi": 254.238617,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_2_3": {
+      "rsi": 3.518361,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_3_0": {
+      "rsi": 8.229285,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_3_1": {
+      "rsi": 152885.3125,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_3_2": {
+      "rsi": 15.154564,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "NormalizedMoment_3_3": {
+      "rsi": 346883.3125,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "HuMoment_0": {
+      "rsi": 0.000193,
+      "category": "stable",
+      "correction": null
+    },
+    "HuMoment_1": {
+      "rsi": 0.000233,
+      "category": "stable",
+      "correction": null
+    },
+    "HuMoment_2": {
+      "rsi": 0.754123,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "HuMoment_3": {
+      "rsi": 16.540394,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "HuMoment_4": {
+      "rsi": 794.380005,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "HuMoment_5": {
+      "rsi": 34.458817,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "HuMoment_6": {
+      "rsi": 14.578012,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "InertiaTensor_0_0": {
+      "rsi": 0.185698,
+      "category": "moderate",
+      "correction": "moment_rotation_correction"
+    },
+    "InertiaTensor_0_1": {
+      "rsi": 427775.0,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "InertiaTensor_1_0": {
+      "rsi": 427775.0,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "InertiaTensor_1_1": {
+      "rsi": 8.602487,
+      "category": "high",
+      "correction": "moment_rotation_correction"
+    },
+    "InertiaTensorEigenvalues_0": {
+      "rsi": 2.3e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "InertiaTensorEigenvalues_1": {
+      "rsi": 2.3e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "PerimeterCrofton": {
+      "rsi": 0.00036,
+      "category": "stable",
+      "correction": null
+    },
+    "Zernike_0_0": {
+      "rsi": 0.000466,
+      "category": "stable",
+      "correction": null
+    },
+    "Zernike_1_1": {
+      "rsi": 2.133783,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_2_0": {
+      "rsi": 0.001311,
+      "category": "stable",
+      "correction": null
+    },
+    "Zernike_2_2": {
+      "rsi": 0.002305,
+      "category": "stable",
+      "correction": null
+    },
+    "Zernike_3_1": {
+      "rsi": 1.646915,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_3_3": {
+      "rsi": 2.927991,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_4_0": {
+      "rsi": 0.01493,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_4_2": {
+      "rsi": 0.004936,
+      "category": "stable",
+      "correction": null
+    },
+    "Zernike_4_4": {
+      "rsi": 0.016629,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_5_1": {
+      "rsi": 4.043367,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_5_3": {
+      "rsi": 0.605157,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_5_5": {
+      "rsi": 3.823194,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_6_0": {
+      "rsi": 0.05911,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_6_2": {
+      "rsi": 0.02149,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_6_4": {
+      "rsi": 0.036218,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_6_6": {
+      "rsi": 0.042334,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_7_1": {
+      "rsi": 3.272163,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_7_3": {
+      "rsi": 1.546975,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_7_5": {
+      "rsi": 1.677241,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_7_7": {
+      "rsi": 0.516407,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_8_0": {
+      "rsi": 0.083738,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_8_2": {
+      "rsi": 0.033535,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_8_4": {
+      "rsi": 0.080125,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_8_6": {
+      "rsi": 0.078445,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_8_8": {
+      "rsi": 0.086298,
+      "category": "low",
+      "correction": null
+    },
+    "Zernike_9_1": {
+      "rsi": 2.17101,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_9_3": {
+      "rsi": 1.999058,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_9_5": {
+      "rsi": 0.453431,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_9_7": {
+      "rsi": 0.783705,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "Zernike_9_9": {
+      "rsi": 0.848341,
+      "category": "test_artefact",
+      "correction": null
+    },
+    "MinFeretDiameter": {
+      "rsi": 0.000291,
+      "category": "stable",
+      "correction": null
+    },
+    "MaxFeretDiameter": {
+      "rsi": 4.6e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_IntegratedIntensity": {
+      "rsi": 5e-06,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_MeanIntensity": {
+      "rsi": 0.000111,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_StdIntensity": {
+      "rsi": 0.009343,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_MinIntensity": {
+      "rsi": 0.153465,
+      "category": "moderate",
+      "correction": null
+    },
+    "Intensity_MaxIntensity": {
+      "rsi": 0.000982,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_MassDisplacement": {
+      "rsi": 0.001031,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_LowerQuartileIntensity": {
+      "rsi": 0.000205,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_MedianIntensity": {
+      "rsi": 7.4e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_MADIntensity": {
+      "rsi": 0.002162,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_UpperQuartileIntensity": {
+      "rsi": 5.5e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "Location_CenterMassIntensity_X": {
+      "rsi": 0.587861,
+      "category": "moderate",
+      "correction": "convert_to_distance_from_centroid"
+    },
+    "Location_CenterMassIntensity_Y": {
+      "rsi": 5.344895,
+      "category": "high",
+      "correction": "convert_to_distance_from_centroid"
+    },
+    "Location_CenterMassIntensity_Z": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Location_MaxIntensity_X": {
+      "rsi": 0.628526,
+      "category": "moderate",
+      "correction": "convert_to_distance_from_centroid"
+    },
+    "Location_MaxIntensity_Y": {
+      "rsi": 3.748785,
+      "category": "high",
+      "correction": "convert_to_distance_from_centroid"
+    },
+    "Location_MaxIntensity_Z": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Intensity_IntegratedIntensityEdge": {
+      "rsi": 0.009391,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_MeanIntensityEdge": {
+      "rsi": 0.008361,
+      "category": "stable",
+      "correction": null
+    },
+    "Intensity_StdIntensityEdge": {
+      "rsi": 0.03707,
+      "category": "low",
+      "correction": null
+    },
+    "Intensity_MinIntensityEdge": {
+      "rsi": 0.153465,
+      "category": "moderate",
+      "correction": null
+    },
+    "Intensity_MaxIntensityEdge": {
+      "rsi": 0.006673,
+      "category": "stable",
+      "correction": null
+    },
+    "Granularity_1": {
+      "rsi": 0.045342,
+      "category": "low",
+      "correction": null
+    },
+    "Granularity_2": {
+      "rsi": 0.163395,
+      "category": "moderate",
+      "correction": null
+    },
+    "Granularity_3": {
+      "rsi": 4.389052,
+      "category": "high",
+      "correction": null
+    },
+    "Granularity_4": {
+      "rsi": 0.058792,
+      "category": "low",
+      "correction": null
+    },
+    "Granularity_5": {
+      "rsi": 0.261417,
+      "category": "moderate",
+      "correction": null
+    },
+    "Granularity_6": {
+      "rsi": 48.647114,
+      "category": "high",
+      "correction": null
+    },
+    "Granularity_7": {
+      "rsi": 0.250705,
+      "category": "moderate",
+      "correction": null
+    },
+    "Granularity_8": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Granularity_9": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Granularity_10": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Granularity_11": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Granularity_12": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Granularity_13": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Granularity_14": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Granularity_15": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "Granularity_16": {
+      "rsi": null,
+      "category": "constant",
+      "correction": null
+    },
+    "RadialDistribution_FracAtD_1of4": {
+      "rsi": 0.007303,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_MeanFrac_1of4": {
+      "rsi": 0.119176,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_RadialCV_1of4": {
+      "rsi": 0.124249,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_FracAtD_2of4": {
+      "rsi": 0.00665,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_MeanFrac_2of4": {
+      "rsi": 0.072543,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_RadialCV_2of4": {
+      "rsi": 0.057454,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_FracAtD_3of4": {
+      "rsi": 0.022808,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_MeanFrac_3of4": {
+      "rsi": 0.089803,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_RadialCV_3of4": {
+      "rsi": 0.028885,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_FracAtD_4of4": {
+      "rsi": 0.002873,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_MeanFrac_4of4": {
+      "rsi": 0.0321,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_RadialCV_4of4": {
+      "rsi": 0.046544,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_ZernikeMagnitude_0_0": {
+      "rsi": 0.000134,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_0_0": {
+      "rsi": null,
+      "category": "constant",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_1_1": {
+      "rsi": 0.407809,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_1_1": {
+      "rsi": 1.172593,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_2_0": {
+      "rsi": 0.001282,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_2_0": {
+      "rsi": 0.073827,
+      "category": "low",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_2_2": {
+      "rsi": 0.000408,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_2_2": {
+      "rsi": 2.172742,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_3_1": {
+      "rsi": 0.327735,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_3_1": {
+      "rsi": 1.021347,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_3_3": {
+      "rsi": 0.651066,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_3_3": {
+      "rsi": 0.948281,
+      "category": "moderate",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_4_0": {
+      "rsi": 0.001005,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_4_0": {
+      "rsi": 0.005222,
+      "category": "stable",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_4_2": {
+      "rsi": 0.001773,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_4_2": {
+      "rsi": 1.928812,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_4_4": {
+      "rsi": 0.001799,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_4_4": {
+      "rsi": 4.034132,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_5_1": {
+      "rsi": 0.405968,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_5_1": {
+      "rsi": 0.948217,
+      "category": "moderate",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_5_3": {
+      "rsi": 0.298499,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_5_3": {
+      "rsi": 1.160128,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_5_5": {
+      "rsi": 0.813835,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_5_5": {
+      "rsi": 1.408571,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_6_0": {
+      "rsi": 0.005889,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_6_0": {
+      "rsi": 0.003477,
+      "category": "stable",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_6_2": {
+      "rsi": 0.002503,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_6_2": {
+      "rsi": 1.179858,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_6_4": {
+      "rsi": 0.004391,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_6_4": {
+      "rsi": 1.242102,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_6_6": {
+      "rsi": 0.002981,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_6_6": {
+      "rsi": 2.474732,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_7_1": {
+      "rsi": 0.44332,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_7_1": {
+      "rsi": 0.973151,
+      "category": "moderate",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_7_3": {
+      "rsi": 0.457878,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_7_3": {
+      "rsi": 1.048053,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_7_5": {
+      "rsi": 0.525331,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_7_5": {
+      "rsi": 0.98942,
+      "category": "moderate",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_7_7": {
+      "rsi": 0.828033,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_7_7": {
+      "rsi": 1.022233,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_8_0": {
+      "rsi": 0.014643,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_8_0": {
+      "rsi": 0.062441,
+      "category": "low",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_8_2": {
+      "rsi": 0.007015,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_8_2": {
+      "rsi": 1.085974,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_8_4": {
+      "rsi": 0.011797,
+      "category": "low",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_8_4": {
+      "rsi": 1.165715,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_8_6": {
+      "rsi": 0.008644,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_8_6": {
+      "rsi": 1.136552,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_8_8": {
+      "rsi": 0.005643,
+      "category": "stable",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_8_8": {
+      "rsi": 1.824479,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_9_1": {
+      "rsi": 0.634949,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_9_1": {
+      "rsi": 0.973285,
+      "category": "moderate",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_9_3": {
+      "rsi": 0.709335,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_9_3": {
+      "rsi": 1.062164,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_9_5": {
+      "rsi": 0.597969,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_9_5": {
+      "rsi": 0.879304,
+      "category": "moderate",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_9_7": {
+      "rsi": 0.752283,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_9_7": {
+      "rsi": 1.113308,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "RadialDistribution_ZernikeMagnitude_9_9": {
+      "rsi": 0.930426,
+      "category": "moderate",
+      "correction": null
+    },
+    "RadialDistribution_ZernikePhase_9_9": {
+      "rsi": 1.233733,
+      "category": "high",
+      "correction": "phase_minus_m_times_orientation"
+    },
+    "AngularSecondMoment_3_00_256": {
+      "rsi": 0.000601,
+      "category": "stable",
+      "correction": null
+    },
+    "Contrast_3_00_256": {
+      "rsi": 0.037038,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_3_00_256": {
+      "rsi": 0.055969,
+      "category": "low",
+      "correction": null
+    },
+    "Variance_3_00_256": {
+      "rsi": 0.007605,
+      "category": "stable",
+      "correction": null
+    },
+    "InverseDifferenceMoment_3_00_256": {
+      "rsi": 0.005345,
+      "category": "stable",
+      "correction": null
+    },
+    "SumAverage_3_00_256": {
+      "rsi": 7.5e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_3_00_256": {
+      "rsi": 0.006245,
+      "category": "stable",
+      "correction": null
+    },
+    "SumEntropy_3_00_256": {
+      "rsi": 0.000428,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_3_00_256": {
+      "rsi": 0.000422,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_3_00_256": {
+      "rsi": 0.001121,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceEntropy_3_00_256": {
+      "rsi": 0.004319,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_3_00_256": {
+      "rsi": 0.140369,
+      "category": "moderate",
+      "correction": null
+    },
+    "InfoMeas2_3_00_256": {
+      "rsi": 0.194581,
+      "category": "moderate",
+      "correction": null
+    },
+    "AngularSecondMoment_3_01_256": {
+      "rsi": 0.001205,
+      "category": "stable",
+      "correction": null
+    },
+    "Contrast_3_01_256": {
+      "rsi": 0.040402,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_3_01_256": {
+      "rsi": 0.042048,
+      "category": "low",
+      "correction": null
+    },
+    "Variance_3_01_256": {
+      "rsi": 0.008405,
+      "category": "stable",
+      "correction": null
+    },
+    "InverseDifferenceMoment_3_01_256": {
+      "rsi": 0.004295,
+      "category": "stable",
+      "correction": null
+    },
+    "SumAverage_3_01_256": {
+      "rsi": 0.0001,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_3_01_256": {
+      "rsi": 0.007831,
+      "category": "stable",
+      "correction": null
+    },
+    "SumEntropy_3_01_256": {
+      "rsi": 0.00071,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_3_01_256": {
+      "rsi": 0.000475,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_3_01_256": {
+      "rsi": 0.001675,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceEntropy_3_01_256": {
+      "rsi": 0.004806,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_3_01_256": {
+      "rsi": 0.052035,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_3_01_256": {
+      "rsi": 0.037679,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_3_02_256": {
+      "rsi": 0.000745,
+      "category": "stable",
+      "correction": null
+    },
+    "Contrast_3_02_256": {
+      "rsi": 0.027832,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_3_02_256": {
+      "rsi": 0.044856,
+      "category": "low",
+      "correction": null
+    },
+    "Variance_3_02_256": {
+      "rsi": 0.007582,
+      "category": "stable",
+      "correction": null
+    },
+    "InverseDifferenceMoment_3_02_256": {
+      "rsi": 0.005753,
+      "category": "stable",
+      "correction": null
+    },
+    "SumAverage_3_02_256": {
+      "rsi": 7.5e-05,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_3_02_256": {
+      "rsi": 0.006634,
+      "category": "stable",
+      "correction": null
+    },
+    "SumEntropy_3_02_256": {
+      "rsi": 0.000448,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_3_02_256": {
+      "rsi": 0.000426,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_3_02_256": {
+      "rsi": 0.001451,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceEntropy_3_02_256": {
+      "rsi": 0.004569,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_3_02_256": {
+      "rsi": 0.094107,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_3_02_256": {
+      "rsi": 0.054788,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_3_03_256": {
+      "rsi": 0.00124,
+      "category": "stable",
+      "correction": null
+    },
+    "Contrast_3_03_256": {
+      "rsi": 0.043082,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_3_03_256": {
+      "rsi": 0.043868,
+      "category": "low",
+      "correction": null
+    },
+    "Variance_3_03_256": {
+      "rsi": 0.008562,
+      "category": "stable",
+      "correction": null
+    },
+    "InverseDifferenceMoment_3_03_256": {
+      "rsi": 0.004268,
+      "category": "stable",
+      "correction": null
+    },
+    "SumAverage_3_03_256": {
+      "rsi": 0.0001,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_3_03_256": {
+      "rsi": 0.008069,
+      "category": "stable",
+      "correction": null
+    },
+    "SumEntropy_3_03_256": {
+      "rsi": 0.000723,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_3_03_256": {
+      "rsi": 0.00048,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_3_03_256": {
+      "rsi": 0.001695,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceEntropy_3_03_256": {
+      "rsi": 0.004841,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_3_03_256": {
+      "rsi": 0.051726,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_3_03_256": {
+      "rsi": 0.037304,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_5_00_256": {
+      "rsi": 0.0017,
+      "category": "stable",
+      "correction": null
+    },
+    "Contrast_5_00_256": {
+      "rsi": 0.057469,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_5_00_256": {
+      "rsi": 0.068653,
+      "category": "low",
+      "correction": null
+    },
+    "Variance_5_00_256": {
+      "rsi": 0.010705,
+      "category": "low",
+      "correction": null
+    },
+    "InverseDifferenceMoment_5_00_256": {
+      "rsi": 0.004046,
+      "category": "stable",
+      "correction": null
+    },
+    "SumAverage_5_00_256": {
+      "rsi": 0.000121,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_5_00_256": {
+      "rsi": 0.010967,
+      "category": "low",
+      "correction": null
+    },
+    "SumEntropy_5_00_256": {
+      "rsi": 0.000988,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_5_00_256": {
+      "rsi": 0.000615,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_5_00_256": {
+      "rsi": 0.002165,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceEntropy_5_00_256": {
+      "rsi": 0.004984,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_5_00_256": {
+      "rsi": 0.081127,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_5_00_256": {
+      "rsi": 0.097327,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_5_01_256": {
+      "rsi": 0.004152,
+      "category": "stable",
+      "correction": null
+    },
+    "Contrast_5_01_256": {
+      "rsi": 0.061121,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_5_01_256": {
+      "rsi": 0.100025,
+      "category": "moderate",
+      "correction": null
+    },
+    "Variance_5_01_256": {
+      "rsi": 0.013623,
+      "category": "low",
+      "correction": null
+    },
+    "InverseDifferenceMoment_5_01_256": {
+      "rsi": 0.004349,
+      "category": "stable",
+      "correction": null
+    },
+    "SumAverage_5_01_256": {
+      "rsi": 0.000203,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_5_01_256": {
+      "rsi": 0.020421,
+      "category": "low",
+      "correction": null
+    },
+    "SumEntropy_5_01_256": {
+      "rsi": 0.002153,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_5_01_256": {
+      "rsi": 0.001297,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_5_01_256": {
+      "rsi": 0.004404,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceEntropy_5_01_256": {
+      "rsi": 0.006225,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_5_01_256": {
+      "rsi": 0.028504,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_5_01_256": {
+      "rsi": 0.021573,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_5_02_256": {
+      "rsi": 0.002139,
+      "category": "stable",
+      "correction": null
+    },
+    "Contrast_5_02_256": {
+      "rsi": 0.04512,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_5_02_256": {
+      "rsi": 0.066973,
+      "category": "low",
+      "correction": null
+    },
+    "Variance_5_02_256": {
+      "rsi": 0.009772,
+      "category": "stable",
+      "correction": null
+    },
+    "InverseDifferenceMoment_5_02_256": {
+      "rsi": 0.004489,
+      "category": "stable",
+      "correction": null
+    },
+    "SumAverage_5_02_256": {
+      "rsi": 0.00012,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_5_02_256": {
+      "rsi": 0.010887,
+      "category": "low",
+      "correction": null
+    },
+    "SumEntropy_5_02_256": {
+      "rsi": 0.001093,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_5_02_256": {
+      "rsi": 0.000663,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_5_02_256": {
+      "rsi": 0.002831,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceEntropy_5_02_256": {
+      "rsi": 0.005428,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_5_02_256": {
+      "rsi": 0.050108,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_5_02_256": {
+      "rsi": 0.038223,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_5_03_256": {
+      "rsi": 0.004264,
+      "category": "stable",
+      "correction": null
+    },
+    "Contrast_5_03_256": {
+      "rsi": 0.065394,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_5_03_256": {
+      "rsi": 0.111907,
+      "category": "moderate",
+      "correction": null
+    },
+    "Variance_5_03_256": {
+      "rsi": 0.013999,
+      "category": "low",
+      "correction": null
+    },
+    "InverseDifferenceMoment_5_03_256": {
+      "rsi": 0.004358,
+      "category": "stable",
+      "correction": null
+    },
+    "SumAverage_5_03_256": {
+      "rsi": 0.000203,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_5_03_256": {
+      "rsi": 0.022302,
+      "category": "low",
+      "correction": null
+    },
+    "SumEntropy_5_03_256": {
+      "rsi": 0.002214,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_5_03_256": {
+      "rsi": 0.001321,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_5_03_256": {
+      "rsi": 0.004484,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceEntropy_5_03_256": {
+      "rsi": 0.006253,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_5_03_256": {
+      "rsi": 0.027992,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_5_03_256": {
+      "rsi": 0.021255,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_10_00_256": {
+      "rsi": 0.011112,
+      "category": "low",
+      "correction": null
+    },
+    "Contrast_10_00_256": {
+      "rsi": 0.136863,
+      "category": "moderate",
+      "correction": null
+    },
+    "Correlation_10_00_256": {
+      "rsi": 0.19816,
+      "category": "moderate",
+      "correction": null
+    },
+    "Variance_10_00_256": {
+      "rsi": 0.052738,
+      "category": "low",
+      "correction": null
+    },
+    "InverseDifferenceMoment_10_00_256": {
+      "rsi": 0.010131,
+      "category": "low",
+      "correction": null
+    },
+    "SumAverage_10_00_256": {
+      "rsi": 0.000966,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_10_00_256": {
+      "rsi": 0.05872,
+      "category": "low",
+      "correction": null
+    },
+    "SumEntropy_10_00_256": {
+      "rsi": 0.005798,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_10_00_256": {
+      "rsi": 0.004278,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_10_00_256": {
+      "rsi": 0.010293,
+      "category": "low",
+      "correction": null
+    },
+    "DifferenceEntropy_10_00_256": {
+      "rsi": 0.009908,
+      "category": "stable",
+      "correction": null
+    },
+    "InfoMeas1_10_00_256": {
+      "rsi": 0.054175,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_10_00_256": {
+      "rsi": 0.038135,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_10_01_256": {
+      "rsi": 0.022619,
+      "category": "low",
+      "correction": null
+    },
+    "Contrast_10_01_256": {
+      "rsi": 0.382546,
+      "category": "moderate",
+      "correction": null
+    },
+    "Correlation_10_01_256": {
+      "rsi": 0.909566,
+      "category": "moderate",
+      "correction": null
+    },
+    "Variance_10_01_256": {
+      "rsi": 0.200527,
+      "category": "moderate",
+      "correction": null
+    },
+    "InverseDifferenceMoment_10_01_256": {
+      "rsi": 0.040895,
+      "category": "low",
+      "correction": null
+    },
+    "SumAverage_10_01_256": {
+      "rsi": 0.009004,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_10_01_256": {
+      "rsi": 0.124695,
+      "category": "moderate",
+      "correction": null
+    },
+    "SumEntropy_10_01_256": {
+      "rsi": 0.036058,
+      "category": "low",
+      "correction": null
+    },
+    "Entropy_10_01_256": {
+      "rsi": 0.026525,
+      "category": "low",
+      "correction": null
+    },
+    "DifferenceVariance_10_01_256": {
+      "rsi": 0.024494,
+      "category": "low",
+      "correction": null
+    },
+    "DifferenceEntropy_10_01_256": {
+      "rsi": 0.039852,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas1_10_01_256": {
+      "rsi": 0.105583,
+      "category": "moderate",
+      "correction": null
+    },
+    "InfoMeas2_10_01_256": {
+      "rsi": 0.025125,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_10_02_256": {
+      "rsi": 0.014668,
+      "category": "low",
+      "correction": null
+    },
+    "Contrast_10_02_256": {
+      "rsi": 0.075024,
+      "category": "low",
+      "correction": null
+    },
+    "Correlation_10_02_256": {
+      "rsi": 0.229388,
+      "category": "moderate",
+      "correction": null
+    },
+    "Variance_10_02_256": {
+      "rsi": 0.03336,
+      "category": "low",
+      "correction": null
+    },
+    "InverseDifferenceMoment_10_02_256": {
+      "rsi": 0.012335,
+      "category": "low",
+      "correction": null
+    },
+    "SumAverage_10_02_256": {
+      "rsi": 0.000964,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_10_02_256": {
+      "rsi": 0.045264,
+      "category": "low",
+      "correction": null
+    },
+    "SumEntropy_10_02_256": {
+      "rsi": 0.006944,
+      "category": "stable",
+      "correction": null
+    },
+    "Entropy_10_02_256": {
+      "rsi": 0.005071,
+      "category": "stable",
+      "correction": null
+    },
+    "DifferenceVariance_10_02_256": {
+      "rsi": 0.013715,
+      "category": "low",
+      "correction": null
+    },
+    "DifferenceEntropy_10_02_256": {
+      "rsi": 0.011718,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas1_10_02_256": {
+      "rsi": 0.029422,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas2_10_02_256": {
+      "rsi": 0.021532,
+      "category": "low",
+      "correction": null
+    },
+    "AngularSecondMoment_10_03_256": {
+      "rsi": 0.022501,
+      "category": "low",
+      "correction": null
+    },
+    "Contrast_10_03_256": {
+      "rsi": 0.528984,
+      "category": "moderate",
+      "correction": null
+    },
+    "Correlation_10_03_256": {
+      "rsi": 0.551551,
+      "category": "moderate",
+      "correction": null
+    },
+    "Variance_10_03_256": {
+      "rsi": 0.258188,
+      "category": "moderate",
+      "correction": null
+    },
+    "InverseDifferenceMoment_10_03_256": {
+      "rsi": 0.037947,
+      "category": "low",
+      "correction": null
+    },
+    "SumAverage_10_03_256": {
+      "rsi": 0.008972,
+      "category": "stable",
+      "correction": null
+    },
+    "SumVariance_10_03_256": {
+      "rsi": 0.157879,
+      "category": "moderate",
+      "correction": null
+    },
+    "SumEntropy_10_03_256": {
+      "rsi": 0.036573,
+      "category": "low",
+      "correction": null
+    },
+    "Entropy_10_03_256": {
+      "rsi": 0.02617,
+      "category": "low",
+      "correction": null
+    },
+    "DifferenceVariance_10_03_256": {
+      "rsi": 0.022036,
+      "category": "low",
+      "correction": null
+    },
+    "DifferenceEntropy_10_03_256": {
+      "rsi": 0.037033,
+      "category": "low",
+      "correction": null
+    },
+    "InfoMeas1_10_03_256": {
+      "rsi": 0.106366,
+      "category": "moderate",
+      "correction": null
+    },
+    "InfoMeas2_10_03_256": {
+      "rsi": 0.025919,
+      "category": "low",
+      "correction": null
+    }
   }
 }
