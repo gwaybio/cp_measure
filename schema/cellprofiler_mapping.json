@@ -1,0 +1,154 @@
+{
+  "schema_version": "0.1",
+  "description": "Good-enough mapping between cp_measure feature names and CellProfiler 4.x feature names. This is NOT exhaustive and NOT guaranteed to be perfect. Use it to flag clear incompatibilities; do not assume everything maps cleanly.",
+  "notes": [
+    "CellProfiler embeds the image/channel name and object name inside the feature string. cp_measure does not — channel is handled by the caller (e.g. via featurizer.py's __ separator).",
+    "Texture: the image name is inserted BETWEEN the Haralick feature name and the scale, e.g. cp_measure 'AngularSecondMoment_3_00_256' → CellProfiler 'Texture_AngularSecondMoment_{image}_3_00_256'.",
+    "RadialDistribution: image name inserted between metric and bin, e.g. 'RadialDistribution_FracAtD_1of4' → 'RadialDistribution_FracAtD_{image}_1of4'.",
+    "Granularity: image name appended, e.g. 'Granularity_1' → 'Granularity_1_{image}'.",
+    "Some cp_measure features (moments, InertiaTensor, etc.) have no direct CellProfiler equivalent.",
+    "Some CellProfiler features (e.g. AreaShape_HullSolidity) may not exist in cp_measure.",
+    "Confidence levels: high = math and name verified; medium = name matches, math assumed equivalent; low = plausible match, unverified."
+  ],
+  "categories": {
+    "sizeshape": {
+      "cp_measure_module": "measureobjectsizeshape.get_sizeshape",
+      "cellprofiler_module": "MeasureObjectSizeShape",
+      "naming_rule": "AreaShape_{cp_name}  (no channel needed — shape is image-independent)",
+      "confidence": "high",
+      "features": {
+        "Area":                    {"cellprofiler": "AreaShape_Area",                    "confidence": "high"},
+        "Perimeter":               {"cellprofiler": "AreaShape_Perimeter",               "confidence": "high"},
+        "FormFactor":              {"cellprofiler": "AreaShape_FormFactor",              "confidence": "high"},
+        "Eccentricity":            {"cellprofiler": "AreaShape_Eccentricity",            "confidence": "high"},
+        "MajorAxisLength":         {"cellprofiler": "AreaShape_MajorAxisLength",         "confidence": "high"},
+        "MinorAxisLength":         {"cellprofiler": "AreaShape_MinorAxisLength",         "confidence": "high"},
+        "Orientation":             {"cellprofiler": "AreaShape_Orientation",             "confidence": "high"},
+        "Compactness":             {"cellprofiler": "AreaShape_Compactness",             "confidence": "high"},
+        "Solidity":                {"cellprofiler": "AreaShape_Solidity",                "confidence": "high"},
+        "Extent":                  {"cellprofiler": "AreaShape_Extent",                  "confidence": "high"},
+        "EulerNumber":             {"cellprofiler": "AreaShape_EulerNumber",             "confidence": "high"},
+        "EquivalentDiameter":      {"cellprofiler": "AreaShape_EquivalentDiameter",      "confidence": "high"},
+        "MaximumRadius":           {"cellprofiler": "AreaShape_MaximumRadius",           "confidence": "high"},
+        "MeanRadius":              {"cellprofiler": "AreaShape_MeanRadius",              "confidence": "high"},
+        "MedianRadius":            {"cellprofiler": "AreaShape_MedianRadius",            "confidence": "high"},
+        "ConvexArea":              {"cellprofiler": "AreaShape_ConvexArea",              "confidence": "medium"},
+        "BoundingBoxArea":         {"cellprofiler": null,                                "confidence": "low",   "note": "No direct CellProfiler equivalent; closest is bounding box min/max"},
+        "Center_X":                {"cellprofiler": "AreaShape_Center_X",               "confidence": "medium"},
+        "Center_Y":                {"cellprofiler": "AreaShape_Center_Y",               "confidence": "medium"},
+        "FilledArea":              {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
+        "SpatialMoment_0_0":       {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only — CellProfiler does not expose raw spatial moments"},
+        "CentralMoment_0_0":       {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
+        "NormalizedMoment_0_0":    {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
+        "HuMoment_0":              {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
+        "InertiaTensor_0_0":       {"cellprofiler": null,                                "confidence": "low",   "note": "cp_measure only"},
+        "InertiaTensorEigenvalues_0": {"cellprofiler": null,                             "confidence": "low",   "note": "cp_measure only"},
+        "PerimeterCrofton":        {"cellprofiler": "AreaShape_PerimeterCrofton",        "confidence": "medium"}
+      }
+    },
+    "zernike": {
+      "cp_measure_module": "measureobjectsizeshape.get_zernike",
+      "cellprofiler_module": "MeasureObjectSizeShape (Zernike option)",
+      "naming_rule": "AreaShape_Zernike_{n}_{m}",
+      "confidence": "high",
+      "example": {"cp_measure": "Zernike_0_0", "cellprofiler": "AreaShape_Zernike_0_0"}
+    },
+    "feret": {
+      "cp_measure_module": "measureobjectsizeshape.get_feret",
+      "cellprofiler_module": "MeasureObjectSizeShape",
+      "naming_rule": "AreaShape_{cp_name}",
+      "confidence": "high",
+      "features": {
+        "MinFeretDiameter": {"cellprofiler": "AreaShape_MinFeretDiameter", "confidence": "high"},
+        "MaxFeretDiameter": {"cellprofiler": "AreaShape_MaxFeretDiameter", "confidence": "high"}
+      }
+    },
+    "intensity": {
+      "cp_measure_module": "measureobjectintensity.get_intensity",
+      "cellprofiler_module": "MeasureObjectIntensity",
+      "naming_rule": "{cp_name}_{image}  (append channel/image name)",
+      "confidence": "high",
+      "features": {
+        "Intensity_IntegratedIntensity":      {"cellprofiler": "Intensity_IntegratedIntensity_{image}",      "confidence": "high"},
+        "Intensity_MeanIntensity":            {"cellprofiler": "Intensity_MeanIntensity_{image}",            "confidence": "high"},
+        "Intensity_StdIntensity":             {"cellprofiler": "Intensity_StdIntensity_{image}",             "confidence": "high"},
+        "Intensity_MinIntensity":             {"cellprofiler": "Intensity_MinIntensity_{image}",             "confidence": "high"},
+        "Intensity_MaxIntensity":             {"cellprofiler": "Intensity_MaxIntensity_{image}",             "confidence": "high"},
+        "Intensity_MassDisplacement":         {"cellprofiler": "Intensity_MassDisplacement_{image}",         "confidence": "high"},
+        "Intensity_LowerQuartileIntensity":   {"cellprofiler": "Intensity_LowerQuartileIntensity_{image}",   "confidence": "high"},
+        "Intensity_MedianIntensity":          {"cellprofiler": "Intensity_MedianIntensity_{image}",          "confidence": "high"},
+        "Intensity_MADIntensity":             {"cellprofiler": "Intensity_MADIntensity_{image}",             "confidence": "high"},
+        "Intensity_UpperQuartileIntensity":   {"cellprofiler": "Intensity_UpperQuartileIntensity_{image}",   "confidence": "high"},
+        "Intensity_IntegratedIntensityEdge":  {"cellprofiler": "Intensity_IntegratedIntensityEdge_{image}",  "confidence": "high"},
+        "Intensity_MeanIntensityEdge":        {"cellprofiler": "Intensity_MeanIntensityEdge_{image}",        "confidence": "high"},
+        "Intensity_StdIntensityEdge":         {"cellprofiler": "Intensity_StdIntensityEdge_{image}",         "confidence": "high"},
+        "Intensity_MinIntensityEdge":         {"cellprofiler": "Intensity_MinIntensityEdge_{image}",         "confidence": "high"},
+        "Intensity_MaxIntensityEdge":         {"cellprofiler": "Intensity_MaxIntensityEdge_{image}",         "confidence": "high"},
+        "Location_CenterMassIntensity_X":     {"cellprofiler": "Location_CenterMassIntensity_X_{image}",     "confidence": "medium"},
+        "Location_CenterMassIntensity_Y":     {"cellprofiler": "Location_CenterMassIntensity_Y_{image}",     "confidence": "medium"},
+        "Location_MaxIntensity_X":            {"cellprofiler": "Location_MaxIntensity_X_{image}",            "confidence": "medium"},
+        "Location_MaxIntensity_Y":            {"cellprofiler": "Location_MaxIntensity_Y_{image}",            "confidence": "medium"}
+      }
+    },
+    "texture": {
+      "cp_measure_module": "measuretexture.get_texture",
+      "cellprofiler_module": "MeasureTexture",
+      "naming_rule": "Texture_{haralick_name}_{image}_{scale}_{direction}_{bins}  (image inserted between name and scale)",
+      "confidence": "medium",
+      "note": "The image name is inserted INSIDE the feature string in CellProfiler, not appended. This makes automated translation fragile.",
+      "example": {
+        "cp_measure": "AngularSecondMoment_3_00_256",
+        "cellprofiler": "Texture_AngularSecondMoment_{image}_3_00_256"
+      },
+      "haralick_features": [
+        "AngularSecondMoment", "Contrast", "Correlation", "Variance",
+        "InverseDifferenceMoment", "SumAverage", "SumVariance", "SumEntropy",
+        "Entropy", "DifferenceVariance", "DifferenceEntropy", "InfoMeas1", "InfoMeas2"
+      ]
+    },
+    "granularity": {
+      "cp_measure_module": "measuregranularity.get_granularity",
+      "cellprofiler_module": "MeasureGranularity",
+      "naming_rule": "Granularity_{n}_{image}  (append channel/image name)",
+      "confidence": "medium",
+      "example": {
+        "cp_measure": "Granularity_1",
+        "cellprofiler": "Granularity_1_{image}"
+      }
+    },
+    "radial_distribution": {
+      "cp_measure_module": "measureobjectintensitydistribution.get_radial_distribution",
+      "cellprofiler_module": "MeasureObjectIntensityDistribution",
+      "naming_rule": "RadialDistribution_{metric}_{image}_{bin}  (image inserted between metric and bin)",
+      "confidence": "medium",
+      "note": "Like texture, the image name is inserted inside the string, not appended.",
+      "example": {
+        "cp_measure": "RadialDistribution_FracAtD_1of4",
+        "cellprofiler": "RadialDistribution_FracAtD_{image}_1of4"
+      }
+    },
+    "radial_zernikes": {
+      "cp_measure_module": "measureobjectintensitydistribution.get_radial_zernikes",
+      "cellprofiler_module": "MeasureObjectIntensityDistribution (Zernike option)",
+      "naming_rule": "RadialDistribution_{ZernikeType}_{n}_{m}_{image}  — WARNING: CellProfiler appends image; cp_measure does not include it",
+      "confidence": "low",
+      "note": "Zernike phase and magnitude naming may differ between versions. Treat as low-confidence until validated against benchmark data.",
+      "example": {
+        "cp_measure": "RadialDistribution_ZernikeMagnitude_0_0",
+        "cellprofiler": "RadialDistribution_ZernikeMagnitude_0_0_{image}"
+      }
+    }
+  },
+  "known_gaps": {
+    "cp_measure_only": [
+      "All moment features (SpatialMoment_*, CentralMoment_*, NormalizedMoment_*, HuMoment_*, InertiaTensor*)",
+      "FilledArea",
+      "BoundingBoxArea (as a single feature; CellProfiler exposes bounding box via min/max coordinates)"
+    ],
+    "cellprofiler_only": [
+      "AreaShape_HullSolidity (may differ from Solidity)",
+      "Location_X, Location_Y (centroid from Identify module, not from measure)",
+      "Any features from modules not implemented in cp_measure (e.g. MeasureObjectNeighbors details)"
+    ]
+  }
+}

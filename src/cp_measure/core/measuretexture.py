@@ -213,7 +213,7 @@ def get_texture(
     features = numpy.empty((n_directions, 13, len(unique_labels)))
 
     for index, prop in enumerate(props):
-        label_data = prop["intensity_image"]
+        label_data = prop["image_intensity"]  # "intensity_image" deprecated in skimage 0.26
         try:
             features[:, :, index] = mahotas.features.haralick(
                 label_data, distance=scale, ignore_zeros=True
